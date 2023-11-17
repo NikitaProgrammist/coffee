@@ -52,10 +52,11 @@ class MyWidget(QMainWindow):
         if self.edit_film_widget.exec_() == QDialog.Accepted:
             con = sqlite3.connect('coffee.sqlite')
             cursor = con.cursor()
-            cursor.execute(f"""INSERT INTO coffee (name, exp, molot, description, price, volume) 
-                                VALUES('{self.edit_film_widget.name.text()}', '{self.edit_film_widget.exp.text()}', 
-            '{self.edit_film_widget.molot.text()}', '{self.edit_film_widget.description.toPlainText()}', 
-            '{self.edit_film_widget.price.text()}', '{self.edit_film_widget.volume.text()}')""")
+            cursor.execute(f"""REPLACE INTO coffee (id, name, exp, molot, description, price, volume) 
+                                VALUES({row[0]}, '{self.edit_film_widget.name.text()}', 
+            '{self.edit_film_widget.exp.text()}', '{self.edit_film_widget.molot.text()}', 
+            '{self.edit_film_widget.description.toPlainText()}', '{self.edit_film_widget.price.text()}', 
+            '{self.edit_film_widget.volume.text()}')""")
             con.commit()
         self.loadTable()
 
