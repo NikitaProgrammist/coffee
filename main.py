@@ -1,4 +1,5 @@
 import sys
+
 import sqlite3
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QDialog, QAbstractItemView
