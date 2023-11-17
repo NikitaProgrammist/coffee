@@ -1,15 +1,14 @@
 import sys
 
 import sqlite3
+from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QDialog, QAbstractItemView
-from releases.UI.main import Ui_MainWindow
-from releases.UI.addEditCoffeeForm import Ui_Dialog
 
 
-class MyWidget(QMainWindow, Ui_MainWindow):
+class MyWidget(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setupUi(self)
+        uic.loadUi('main.ui', self)
         self.pushButton.clicked.connect(self.adding)
         self.pushButton_2.clicked.connect(self.rewrite)
         self.tableWidget.setSelectionBehavior(QAbstractItemView.SelectRows)
@@ -17,7 +16,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.loadTable()
 
     def loadTable(self):
-        con = sqlite3.connect('releases/data/coffee.sqlite')
+        con = sqlite3.connect('coffee.sqlite')
         cur = con.cursor()
         result = cur.execute("""SELECT * from coffee""").fetchall()
         self.tableWidget.setColumnCount(7)
@@ -33,7 +32,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
     def adding(self):
         self.edit_film_widget = CoffeeDialog(self)
         if self.edit_film_widget.exec_() == QDialog.Accepted:
-            con = sqlite3.connect('releases/data/coffee.sqlite')
+            con = sqlite3.connect('coffee.sqlite')
             cursor = con.cursor()
             cursor.execute(f"""INSERT INTO coffee (name, exp, molot, description, price, volume) 
                                 VALUES('{self.edit_film_widget.name.text()}', '{self.edit_film_widget.exp.text()}', 
@@ -52,7 +51,7 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.edit_film_widget.price.setText(row[5])
         self.edit_film_widget.volume.setText(row[6])
         if self.edit_film_widget.exec_() == QDialog.Accepted:
-            con = sqlite3.connect('releases/data/coffee.sqlite')
+            con = sqlite3.connect('coffee.sqlite')
             cursor = con.cursor()
             cursor.execute(f"""REPLACE INTO coffee (id, name, exp, molot, description, price, volume) 
                                 VALUES({row[0]}, '{self.edit_film_widget.name.text()}', 
@@ -63,10 +62,10 @@ class MyWidget(QMainWindow, Ui_MainWindow):
         self.loadTable()
 
 
-class CoffeeDialog(QDialog, Ui_Dialog):
+class CoffeeDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setupUi(self)
+        uic.loadUi('addEditCoffeeForm.ui', self)
 
 
 def except_hook(cls, exception, traceback):
